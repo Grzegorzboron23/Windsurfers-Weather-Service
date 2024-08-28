@@ -1,2 +1,8 @@
 server:
   port: 8080
+
+weatherbit:
+  api:
+    key: ${WEATHERBIT_API_KEY}
+    base-url: https://api.weatherbit.io
+

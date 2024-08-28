@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class WindsurferApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WindsurferApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WindsurferApplication.class, args);
+    }
 
 }
