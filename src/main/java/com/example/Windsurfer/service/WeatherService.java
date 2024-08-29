@@ -10,7 +10,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +44,13 @@ public class WeatherService {
         List<Location> locations = initializeLocations();
         List<String> responses = weatherAPIConnection.connectToAPIMultipleCity(locations);
 
-
-        System.out.println("MultipleLocations before");
         for (String currentData : responses) {
             JSONObject currentObject = new JSONObject(currentData);
-            System.out.println("city name" + currentObject.getString("city_name"));
             String cityName = currentObject.getString("city_name");
 
             for (Location location : locations) {
                 if (location.getCity().equals(cityName)) {
                     JSONArray dataArray = currentObject.getJSONArray("data");
-                    System.out.println("GetJsonObject 0 " +  dataArray.getJSONObject(0));
                     JSONObject cityData = dataArray.getJSONObject(0);
                     location.setTemperature(cityData.getDouble("temp"));
                     location.setWindSpeed(cityData.getDouble("wind_spd"));
@@ -70,17 +65,11 @@ public class WeatherService {
 
     public List<Location> findBestWindsurfingLocation() throws IOException, InterruptedException {
         List<Location> locations = getMultipleLocations();
-
-        System.out.println("Find best findBestWindsurfingLocation");
-        System.out.println("Locations " + locations);
-
-        Location bestLocation = null;
-        List<Location> suitableLocations = new ArrayList<>();
+        Location suitableLocation = null;
+        List<Location> bestLocations = new ArrayList<>();
         double highestScore = Double.NEGATIVE_INFINITY;
 
         for (Location location : locations) {
-            System.out.println("Temperature " +location.getTemperature());
-            System.out.println("getWindSpeed " +location.getWindSpeed());
             double temperature = location.getTemperature();
             double windSpeed = location.getWindSpeed();
 
@@ -88,21 +77,18 @@ public class WeatherService {
                 double score = windSpeed * 3 + temperature;
                 if (score > highestScore) {
                     highestScore = score;
-                    bestLocation = location;
+                    suitableLocation = location;
                 }
-            }else{
-                suitableLocations.add(location);
+            } else {
+                bestLocations.add(location);
             }
         }
 
-        System.out.println("Suitbale " + suitableLocations);
-        System.out.println("Best " + bestLocation);
-
-        if(suitableLocations.isEmpty()){
-            return List.of(bestLocation);
+        if (bestLocations.isEmpty()) {
+            return List.of(suitableLocation);
         }
 
-        return suitableLocations;
+        return bestLocations;
     }
 
 

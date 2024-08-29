@@ -35,7 +35,6 @@ public class WeatherAPIConnection {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                System.out.println("Response body for city " + location.getCity() + ": " + response.body());
                 responses.add(response.body());
             } else {
                 throw new IOException("Error fetching weather data for city " + location.getCity() + ": " + response.statusCode());
@@ -47,15 +46,5 @@ public class WeatherAPIConnection {
 
     private String createUrlForCity(Location location) {
         return baseURL + "/v2.0/forecast/daily?city_id=" + location.getCityID() + "&key=" + apiKey;
-    }
-
-    private String createBatchUrl(List<Location> locations) {
-        StringBuilder urlBuilder = new StringBuilder(baseURL + "/v2.0/forecast/daily?");
-        for (Location location : locations) {
-            urlBuilder.append("city_id=").append(location.getCityID()).append("&");
-        }
-
-        urlBuilder.append("key=").append(apiKey);
-        return urlBuilder.toString();
     }
 }
