@@ -3,6 +3,6 @@ server:
 
 weatherbit:
   api:
-    key: ${WEATHERBIT_API_KEY}
+    key: ${WEATHERBIT_API_KEY2}
     base-url: https://api.weatherbit.io
 

@@ -35,7 +35,7 @@ public class WeatherController {
     @GetMapping("/getMultipleCities")
     public  ResponseEntity<Object> getMultipleCities() {
         try {
-            List<Location> result = weatherService.getMultipleLocations();
+            List<Location> result = weatherService.findBestWindsurfingLocation();
             return ResponseEntity.ok(result);
         } catch (IOException | InterruptedException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error" + e.getMessage());
