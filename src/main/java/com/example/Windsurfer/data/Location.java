@@ -15,10 +15,18 @@ public class Location {
     private String city;
     private double temperature;
     private double windSpeed;
+    private double latitude;
+    private double longitude;
 
     public Location(Integer cityID,String city) {
         this.cityID = cityID;
         this.city = city;
+    }
+
+    public Location(String city,Double temperature,Double windSpeed) {
+        this.cityID = cityID;
+        this.temperature = temperature;
+        this.windSpeed = windSpeed;
 
     }
 }

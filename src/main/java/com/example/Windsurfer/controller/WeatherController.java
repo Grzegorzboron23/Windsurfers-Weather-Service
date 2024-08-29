@@ -25,13 +25,6 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("/forecast")
-    public Mono<ResponseEntity<String>> getWeatherForecast(@RequestParam String location, @RequestParam String state) {
-        return weatherService.getWeatherData(location, state)
-                .map(ResponseEntity::ok)
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(500).body("Error retrieving weather data: " + e.getMessage())));
-    }
-
     @GetMapping("/getMultipleCities")
     public  ResponseEntity<Object> getMultipleCities() {
         try {

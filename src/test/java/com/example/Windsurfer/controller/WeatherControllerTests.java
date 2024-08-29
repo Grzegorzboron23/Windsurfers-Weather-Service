@@ -28,12 +28,6 @@ public class WeatherControllerTests {
     @MockBean
     private WeatherService weatherService;
 
-    @BeforeEach
-    void setUp() {
-        when(weatherService.getWeatherData("Warsaw", "PL"))
-                .thenReturn(Mono.just("fake response"));
-    }
-
     @Test
     void shouldReturnOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/api/weather/forecast")

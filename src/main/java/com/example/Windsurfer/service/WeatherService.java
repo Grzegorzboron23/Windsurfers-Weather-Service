@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,17 +14,14 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    private final WebClient webClient;
     private final String apiKey;
     private final String basicURL;
     private final WeatherAPIConnection weatherAPIConnection;
 
-    public WeatherService(WebClient.Builder webClientBuilder,
-                          @Value("${weatherbit.api.key}") String apiKey,
-                          @Value("${weatherbit.api.base-url}") String basicURL, WeatherAPIConnection weatherAPIConnection, WeatherAPIConnection weatherAPIConnection1) {
+    public WeatherService(@Value("${weatherbit.api.key}") String apiKey,
+                          @Value("${weatherbit.api.base-url}") String basicURL, WeatherAPIConnection weatherAPIConnection) {
         this.apiKey = apiKey;
-        this.weatherAPIConnection = weatherAPIConnection1;
-        this.webClient = webClientBuilder.baseUrl(basicURL).build();
+        this.weatherAPIConnection = weatherAPIConnection;
         this.basicURL = basicURL;
     }
 
@@ -52,8 +47,12 @@ public class WeatherService {
                 if (location.getCity().equals(cityName)) {
                     JSONArray dataArray = currentObject.getJSONArray("data");
                     JSONObject cityData = dataArray.getJSONObject(0);
+
                     location.setTemperature(cityData.getDouble("temp"));
                     location.setWindSpeed(cityData.getDouble("wind_spd"));
+
+                    location.setLatitude(cityData.getDouble("lat"));
+                    location.setLongitude(cityData.getDouble("lon"));
                     break;
                 }
             }
@@ -62,11 +61,9 @@ public class WeatherService {
         return locations;
     }
 
-
     public List<Location> findBestWindsurfingLocation() throws IOException, InterruptedException {
         List<Location> locations = getMultipleLocations();
         Location suitableLocation = null;
-        List<Location> bestLocations = new ArrayList<>();
         double highestScore = Double.NEGATIVE_INFINITY;
 
         for (Location location : locations) {
@@ -79,28 +76,13 @@ public class WeatherService {
                     highestScore = score;
                     suitableLocation = location;
                 }
-            } else {
-                bestLocations.add(location);
             }
         }
 
-        if (bestLocations.isEmpty()) {
-            return List.of(suitableLocation);
+        if (suitableLocation == null) {
+            return List.of();
         }
-
-        return bestLocations;
-    }
-
-
-    public Mono<String> getWeatherData(String city, String state) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/v2.0/forecast/daily")
-                        .queryParam("city", city + "," + state)
-                        .queryParam("key", apiKey)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class);
+        return List.of(suitableLocation);
     }
 }
 
