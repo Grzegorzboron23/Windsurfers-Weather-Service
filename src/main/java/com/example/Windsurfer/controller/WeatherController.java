@@ -25,7 +25,7 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("/getMultipleCities")
+    @GetMapping("/getBestLocationForSurfing")
     public  ResponseEntity<Object> getMultipleCities() {
         try {
             List<Location> result = weatherService.findBestWindsurfingLocation();
