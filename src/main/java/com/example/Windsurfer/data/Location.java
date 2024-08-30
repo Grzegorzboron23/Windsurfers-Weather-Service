@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Location {
     private Integer cityID;
-    private String state;
     private String city;
     private double temperature;
     private double windSpeed;

@@ -29,7 +29,7 @@ public class WeatherServiceTests {
 
     @Test
     void testInitializeLocations() {
-        List<Location> locations = weatherService.initializeLocations();
+        List<Location> locations = weatherService.getPredefinedLocations();
         assertNotNull(locations);
         assertEquals(5, locations.size());
 
@@ -51,7 +51,7 @@ public class WeatherServiceTests {
 
     @Test
     void testIndividualLocationProperties() {
-        List<Location> locations = weatherService.initializeLocations();
+        List<Location> locations = weatherService.getPredefinedLocations();
 
         // Check each location for non-null properties
         for (Location location : locations) {
