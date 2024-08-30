@@ -30,7 +30,7 @@ public class WeatherAPIConnection {
         HttpClient client = HttpClient.newHttpClient();
 
         for (Location location : locations) {
-            String url = createUrlForCity(location); // Użyj pojedynczego zapytania dla każdego miasta
+            String url = createUrlForCity(location); // Use single request for each city
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -44,7 +44,31 @@ public class WeatherAPIConnection {
         return responses;
     }
 
+    public List<String> connectToAPIMultipleCityForDate(List<Location> locations, String date) throws IOException, InterruptedException {
+        List<String> responses = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+
+        for (Location location : locations) {
+            String url = createUrlForCityWithDate(location, date); // Use single request for each city with date
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                responses.add(response.body());
+            } else {
+                throw new IOException("Error fetching weather data for city " + location.getCity() + " for date " + date + ": " + response.statusCode());
+            }
+        }
+
+        return responses;
+    }
+
     private String createUrlForCity(Location location) {
         return baseURL + "/v2.0/forecast/daily?city_id=" + location.getCityID() + "&key=" + apiKey;
     }
+
+    private String createUrlForCityWithDate(Location location, String date) {
+        return baseURL + "/v2.0/history/daily?city_id=" + location.getCityID() + "&start_date=" + date + "&end_date=" + date + "&key=" + apiKey;
+    }
 }
+
