@@ -26,12 +26,16 @@ public class WeatherController {
     }
 
     @GetMapping("/getBestLocation")
-    public  ResponseEntity<Object> getMultipleCities() {
+    public ResponseEntity<Object> getMultipleCities() {
         try {
             List<Location> result = weatherService.findBestWindsurfingLocation();
+            if (result.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suitable windsurfing locations found.");
+            }
+
             return ResponseEntity.ok(result);
         } catch (IOException | InterruptedException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 }
