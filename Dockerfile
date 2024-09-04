@@ -1,4 +1,4 @@
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.8.8-eclipse-temurin-17 AS build  # Użyj dostępnego obrazu Maven z JDK 17
 WORKDIR /app
 
 COPY pom.xml .
