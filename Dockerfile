@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine AS build
+FROM openjdk:11-jre-alpine AS build
 WORKDIR /app
 
 COPY pom.xml .
